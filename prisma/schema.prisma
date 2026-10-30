@@ -11,3 +11,105 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Roles{
+  seeker
+  employer
+}
+
+enum EmploymentType {
+  fullTime
+  partTime
+  internship
+}
+
+enum ApplicationStatus {
+  pending
+  reviewing
+  interview
+  accepted
+  rejected
+}
+
+enum JobStatus{
+  open
+  closed
+  draft
+}
+
+model User{
+  id String @id @default(uuid())
+  email String @unique
+  password String
+  image String?
+  firstName String
+  lastName String
+  roles Roles
+  createdAt DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  applications Application[]
+  savedJobs SavedJob[]
+  company Company?
+}
+
+model Company{
+  id String @id @default(uuid())
+  employerId String @unique
+  image String?
+  companyName String
+  companyDescription String?
+  location String
+  website String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  job Job[]
+
+  employer User @relation(fields: [employerId], references: [id])
+}
+
+model Job{
+  id String @id @default(uuid())
+  companyId String
+  jobPosition String
+  jobDescription String?
+  minSalary Int?
+  maxSalary Int?
+  employmentType EmploymentType
+  status JobStatus
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applications Application[]
+  savedJob SavedJob[]
+
+  company Company @relation(fields: [companyId], references: [id])
+}
+
+//junction table
+model Application{
+  id String @id @default(uuid())
+  jobId String
+  applicantId String
+  resume String
+  coverLetter String?
+  status ApplicationStatus
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  job Job @relation(fields: [jobId], references: [id])
+  seeker User @relation(fields: [applicantId], references: [id])
+  @@unique([jobId, applicantId])
+}
+
+//junction table
+model SavedJob{
+  id String @id @default(uuid())
+  jobId String
+  userId String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  jobs Job @relation(fields: [jobId], references: [id])
+}
