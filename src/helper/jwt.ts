@@ -3,7 +3,7 @@ import "dotenv/config";
 import type { Response } from "express";
 import jwt from "jsonwebtoken";
 
-interface TokenPayload {
+export interface TokenPayload {
   id: string;
   role: Roles;
 }
