@@ -3,10 +3,12 @@ import type {
   LoginDTO,
   ApiResponseDTO,
   RegisterDTO,
+  UserDTO,
 } from "@/lib/global.dto.js";
 import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
 import { generateAccessToken, generateRefreshToken } from "@/helper/jwt.js";
+import strict from "node:assert/strict";
 
 export const login = async (
   req: Request<{}, ApiResponseDTO<{ accessToken: string }>, LoginDTO>,
@@ -49,7 +51,7 @@ export const login = async (
 
 export const register = async (
   req: Request<{}, {}, RegisterDTO>,
-  res: Response<ApiResponseDTO<{}>>,
+  res: Response<ApiResponseDTO<UserDTO>>,
 ) => {
   try {
     const { email, password, firstName, lastName, role } = req.body;
@@ -62,9 +64,9 @@ export const register = async (
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 13);
+    const hashedPassword: string = await bcrypt.hash(password, 13);
 
-    const newUser = await prisma.user.create({
+    const newUser: UserDTO = await prisma.user.create({
       data: { email, password: hashedPassword, firstName, lastName, role },
       select: {
         id: true,
@@ -80,6 +82,25 @@ export const register = async (
       message: "User created successfully!",
       data: newUser,
     });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const logout = async (
+  req: Request,
+  res: Response<ApiResponseDTO<{}>>,
+) => {
+  try {
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Logged out successfully!" });
   } catch (error) {
     return res.status(500).send({
       success: false,
