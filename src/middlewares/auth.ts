@@ -45,5 +45,4 @@ export const authenticate = async (
       message: "Internal server error. Please try again later.",
     });
   }
-  next();
 };
