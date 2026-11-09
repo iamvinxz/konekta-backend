@@ -108,6 +108,27 @@ export const deleteJob = async (
 ) => {
   try {
     const { id } = req.params;
+    const employerId = req.user.id;
+
+    //retrieve the job and its related company data
+    const job = await prisma.job.findUnique({
+      where: { id },
+      include: { company: { select: { employerId: true } } },
+    });
+
+    if (!job) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Job not found." });
+    }
+
+    if (job.company.employerId !== employerId) {
+      return res.status(403).send({
+        success: false,
+        message: "You are not authorized to delete this job.",
+      });
+    }
+
     await prisma.job.delete({ where: { id } });
 
     return res
