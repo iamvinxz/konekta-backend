@@ -23,6 +23,31 @@ export const getAllJobs = async (
   }
 };
 
+export const getJobsPerCompany = async (
+  req: Request<{ id: string }>,
+  res: Response<ApiResponseDTO<JobDTO[]>>,
+) => {
+  try {
+    const { id } = req.params;
+
+    const jobs: JobDTO[] = await prisma.job.findMany({
+      where: { companyId: id },
+    });
+
+    return res.status(200).send({
+      success: false,
+      message: "Job retrieves successfully",
+      data: jobs,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Someting went wrong. Please try again later.",
+    });
+  }
+};
+
 export const getJobById = async (
   req: Request<{ id: string }>,
   res: Response<ApiResponseDTO<JobDTO>>,
