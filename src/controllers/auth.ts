@@ -1,3 +1,4 @@
+import "dotenv/config";
 import bcrypt from "bcrypt";
 import type {
   LoginDTO,
@@ -7,7 +8,12 @@ import type {
 } from "@/lib/global.dto.js";
 import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
-import { generateAccessToken, generateRefreshToken } from "@/helper/jwt.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  type TokenPayload,
+} from "@/helper/jwt.js";
+import jwt from "jsonwebtoken";
 
 export const login = async (
   req: Request<{}, ApiResponseDTO<{ accessToken: string }>, LoginDTO>,
@@ -109,6 +115,57 @@ export const logout = async (
       success: false,
       message:
         "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const token = async (
+  req: Request,
+  res: Response<ApiResponseDTO<{ accessToken: string }>>,
+) => {
+  try {
+    const refreshToken: string = req.cookies.refreshToken as string;
+
+    if (!refreshToken) {
+      return res
+        .status(401)
+        .send({ success: false, message: "No refresh token" });
+    }
+
+    const user = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET!,
+    ) as TokenPayload;
+
+    const accessToken = generateAccessToken({
+      id: user.id,
+      role: user.role,
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "New access token generated successfully.",
+      data: { accessToken },
+    });
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).send({
+        success: false,
+        message: "Expired refresh token. Please login again.",
+      });
+    }
+
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid refresh token. Please login again.",
+      });
+    }
+
+    return res.status(500).send({
+      success: false,
+      message:
+        "Internal server error. Something went wrong. Please try again later.",
     });
   }
 };
