@@ -1,13 +1,13 @@
-import type { ApiResponseDTO } from "@/lib/global.dto.js";
+import type { ApiResponseDTO, CreateJobDTO, JobDTO } from "@/lib/global.dto.js";
 import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
 
 export const getAllJobs = async (
   req: Request,
-  res: Response<ApiResponseDTO<{}>>,
+  res: Response<ApiResponseDTO<JobDTO[]>>,
 ) => {
   try {
-    const jobs = await prisma.job.findMany();
+    const jobs: JobDTO[] = await prisma.job.findMany();
 
     return res.status(200).send({
       success: true,
@@ -19,6 +19,85 @@ export const getAllJobs = async (
       success: false,
       message:
         "Sorry for the inconvenience. Something went wrong. Please try again later!",
+    });
+  }
+};
+
+export const getJobById = async (
+  req: Request<{ id: string }>,
+  res: Response<ApiResponseDTO<JobDTO>>,
+) => {
+  try {
+    const { id } = req.params;
+
+    const job: JobDTO | null = await prisma.job.findUnique({ where: { id } });
+
+    if (!job) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Job not found." });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Job found successfully.",
+      data: job,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const createJob = async (
+  req: Request<{}, {}, CreateJobDTO>,
+  res: Response<ApiResponseDTO<{}>>,
+) => {
+  try {
+    const {
+      jobPosition,
+      jobDescription,
+      minSalary,
+      maxSalary,
+      employmentType,
+    } = req.body;
+
+    const employerId = req.user.id;
+    const company = await prisma.company.findUnique({ where: { employerId } });
+
+    if (!company) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Company profile not found." });
+    }
+
+    const job: JobDTO = await prisma.job.create({
+      data: {
+        companyId: company.id,
+        jobPosition,
+        jobDescription,
+        maxSalary,
+        minSalary,
+        employmentType,
+        status: "open",
+      },
+    });
+
+    return res.status(201).send({
+      success: true,
+      message: "Job created successfully.",
+      data: job,
+    });
+  } catch (error) {
+    console.error("Create job error:", error);
+
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
     });
   }
 };
