@@ -1,4 +1,8 @@
-import type { Roles } from "@/generated/prisma/enums.js";
+import type {
+  EmploymentType,
+  JobStatus,
+  Roles,
+} from "@/generated/prisma/enums.js";
 
 export interface LoginDTO {
   email: string;
@@ -24,4 +28,17 @@ export interface UserDTO {
   firstName: string;
   lastName: string;
   role: Roles;
+}
+
+export interface JobDTO {
+  id: string;
+  companyId: string;
+  jobPosition: string;
+  jobDescription: string | null;
+  minSalary: number | null;
+  maxSalary: number | null;
+  employmentType: EmploymentType;
+  status: JobStatus;
+  createdAt: Date;
+  updatedAt: Date;
 }
