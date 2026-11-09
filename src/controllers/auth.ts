@@ -8,7 +8,6 @@ import type {
 import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
 import { generateAccessToken, generateRefreshToken } from "@/helper/jwt.js";
-import strict from "node:assert/strict";
 
 export const login = async (
   req: Request<{}, ApiResponseDTO<{ accessToken: string }>, LoginDTO>,
@@ -32,7 +31,11 @@ export const login = async (
         .send({ success: false, message: "Invalid email or password." });
     }
 
-    const accessToken = generateAccessToken({ id: user.id, role: user.role });
+    const accessToken: string = generateAccessToken({
+      id: user.id,
+      role: user.role,
+    });
+
     generateRefreshToken({ id: user.id, role: user.role }, res);
 
     return res.status(200).send({
