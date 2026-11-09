@@ -160,7 +160,7 @@ async function main() {
         "Develop responsive and user-friendly web applications using React and modern frontend technologies.",
       minSalary: 25000,
       maxSalary: 40000,
-      employmentType: "fullTime" as const,
+      employmentType: "fulltime" as const,
       status: "open" as const,
     },
     {
@@ -170,7 +170,7 @@ async function main() {
         "Build RESTful APIs, manage databases, and develop scalable backend services.",
       minSalary: 30000,
       maxSalary: 50000,
-      employmentType: "fullTime" as const,
+      employmentType: "fulltime" as const,
       status: "open" as const,
     },
     {
@@ -180,7 +180,7 @@ async function main() {
         "Provide technical assistance and maintain IT infrastructure.",
       minSalary: 18000,
       maxSalary: 28000,
-      employmentType: "fullTime" as const,
+      employmentType: "fulltime" as const,
       status: "open" as const,
     },
     {
@@ -190,7 +190,7 @@ async function main() {
         "Design intuitive user interfaces and create user-centered experiences.",
       minSalary: 25000,
       maxSalary: 45000,
-      employmentType: "fullTime" as const,
+      employmentType: "fulltime" as const,
       status: "open" as const,
     },
     {
@@ -200,7 +200,7 @@ async function main() {
         "Develop full-stack applications using modern frontend and backend technologies.",
       minSalary: 35000,
       maxSalary: 60000,
-      employmentType: "fullTime" as const,
+      employmentType: "fulltime" as const,
       status: "open" as const,
     },
     {
@@ -220,7 +220,7 @@ async function main() {
         "Assist in developing, testing, and maintaining software applications.",
       minSalary: 22000,
       maxSalary: 35000,
-      employmentType: "fullTime" as const,
+      employmentType: "fulltime" as const,
       status: "open" as const,
     },
     {
@@ -230,7 +230,7 @@ async function main() {
         "Develop cross-platform mobile applications using React Native.",
       minSalary: 30000,
       maxSalary: 50000,
-      employmentType: "fullTime" as const,
+      employmentType: "fulltime" as const,
       status: "closed" as const,
     },
     {
@@ -240,7 +240,7 @@ async function main() {
         "Test software applications, identify bugs, and document QA results.",
       minSalary: 12000,
       maxSalary: 20000,
-      employmentType: "partTime" as const,
+      employmentType: "parttime" as const,
       status: "draft" as const,
     },
   ];

@@ -18,9 +18,9 @@ enum Roles{
 }
 
 enum EmploymentType {
-  fullTime
-  partTime
-  internship
+    fulltime
+    parttime
+    internship
 }
 
 enum ApplicationStatus {
