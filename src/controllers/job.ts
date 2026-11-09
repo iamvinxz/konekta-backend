@@ -101,3 +101,23 @@ export const createJob = async (
     });
   }
 };
+
+export const deleteJob = async (
+  req: Request<{ id: string }>,
+  res: Response<ApiResponseDTO<{}>>,
+) => {
+  try {
+    const { id } = req.params;
+    await prisma.job.delete({ where: { id } });
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Job deleted successfully." });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
