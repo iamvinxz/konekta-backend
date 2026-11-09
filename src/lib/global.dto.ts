@@ -42,3 +42,11 @@ export interface JobDTO {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CreateJobDTO {
+  jobPosition: string;
+  jobDescription: string | null;
+  maxSalary: number | null;
+  minSalary: number | null;
+  employmentType: EmploymentType;
+}
