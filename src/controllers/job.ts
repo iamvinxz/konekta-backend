@@ -187,6 +187,18 @@ export const editJob = async (
       employmentType,
     } = req.body;
 
+    const job = await prisma.job.findUnique({
+      where: { id },
+      include: { company: { select: { employerId: true } } },
+    });
+
+    if (job?.company.employerId !== req.user.id) {
+      return res.status(403).send({
+        success: false,
+        message: "You are unauthorized to edit this job.",
+      });
+    }
+
     const updatedJob: JobDTO = await prisma.job.update({
       where: { id },
       data: {
