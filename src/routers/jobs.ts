@@ -1,6 +1,7 @@
 import {
   createJob,
   deleteJob,
+  editJob,
   getAllJobs,
   getJobById,
   getJobsPerCompany,
@@ -16,5 +17,6 @@ router.get("/:id", authenticate, getJobById);
 router.get("/companies/:id/jobs", authenticate, getJobsPerCompany);
 router.post("/", authenticate, employerPage, createJob);
 router.delete("/:id", authenticate, employerPage, deleteJob);
+router.patch("/:id", authenticate, employerPage, editJob);
 
 export default router;
