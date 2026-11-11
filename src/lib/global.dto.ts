@@ -51,4 +51,21 @@ export interface CreateJobDTO {
   employmentType: EmploymentType;
 }
 
+export interface JobQueryParams {
+  status: JobStatus;
+  employmentType: EmploymentType;
+}
+
+export interface CompanyDTO {
+  id: string;
+  employerId: string;
+  image: string | null;
+  companyName: string;
+  companyDescription: string | null;
+  location: string;
+  website: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type EditJobDTO = CreateJobDTO;
