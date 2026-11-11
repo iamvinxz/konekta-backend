@@ -50,3 +50,5 @@ export interface CreateJobDTO {
   minSalary: number | null;
   employmentType: EmploymentType;
 }
+
+export type EditJobDTO = CreateJobDTO;
