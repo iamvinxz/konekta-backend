@@ -1,4 +1,9 @@
-import type { ApiResponseDTO, CreateJobDTO, JobDTO } from "@/lib/global.dto.js";
+import type {
+  ApiResponseDTO,
+  CreateJobDTO,
+  JobDTO,
+  EditJobDTO,
+} from "@/lib/global.dto.js";
 import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
 
@@ -35,7 +40,7 @@ export const getJobsPerCompany = async (
     });
 
     return res.status(200).send({
-      success: false,
+      success: true,
       message: "Job retrieves successfully",
       data: jobs,
     });
@@ -79,7 +84,7 @@ export const getJobById = async (
 
 export const createJob = async (
   req: Request<{}, {}, CreateJobDTO>,
-  res: Response<ApiResponseDTO<{}>>,
+  res: Response<ApiResponseDTO<JobDTO>>,
 ) => {
   try {
     const {
@@ -159,6 +164,45 @@ export const deleteJob = async (
     return res
       .status(200)
       .send({ success: true, message: "Job deleted successfully." });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const editJob = async (
+  req: Request<{ id: string }, {}, EditJobDTO>,
+  res: Response<ApiResponseDTO<JobDTO>>,
+) => {
+  try {
+    const { id } = req.params;
+    const {
+      jobPosition,
+      jobDescription,
+      minSalary,
+      maxSalary,
+      employmentType,
+    } = req.body;
+
+    const updatedJob: JobDTO = await prisma.job.update({
+      where: { id },
+      data: {
+        jobPosition,
+        jobDescription,
+        minSalary,
+        maxSalary,
+        employmentType,
+      },
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "Job updated successfully.",
+      data: updatedJob,
+    });
   } catch (error) {
     return res.status(500).send({
       success: false,
