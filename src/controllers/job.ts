@@ -1,18 +1,29 @@
+import type { EmploymentType, JobStatus } from "@/generated/prisma/enums.js";
 import type {
   ApiResponseDTO,
   CreateJobDTO,
   JobDTO,
   EditJobDTO,
+  JobQueryParams,
 } from "@/lib/global.dto.js";
 import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
 
 export const getAllJobs = async (
-  req: Request,
+  req: Request<
+    {},
+    {},
+    {},
+    { status: JobStatus; employmentType: EmploymentType }
+  >,
   res: Response<ApiResponseDTO<JobDTO[]>>,
 ) => {
   try {
-    const jobs: JobDTO[] = await prisma.job.findMany();
+    const { status, employmentType } = req.query;
+
+    const jobs: JobDTO[] = await prisma.job.findMany({
+      where: { status, employmentType },
+    });
 
     return res.status(200).send({
       success: true,
