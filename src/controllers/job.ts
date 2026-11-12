@@ -94,7 +94,7 @@ export const getJobById = async (
 };
 
 export const createJob = async (
-  req: Request<{}, {}, CreateJobDTO>,
+  req: Request<{ id: string }, {}, CreateJobDTO>,
   res: Response<ApiResponseDTO<JobDTO>>,
 ) => {
   try {
@@ -106,8 +106,10 @@ export const createJob = async (
       employmentType,
     } = req.body;
 
-    const employerId = req.user.id;
-    const company = await prisma.company.findUnique({ where: { employerId } });
+    const { id } = req.params; //company id
+    const company = await prisma.company.findUnique({
+      where: { id, employerId: req.user.id },
+    });
 
     if (!company) {
       return res
@@ -133,8 +135,6 @@ export const createJob = async (
       data: job,
     });
   } catch (error) {
-    console.error("Create job error:", error);
-
     return res.status(500).send({
       success: false,
       message:
@@ -189,7 +189,7 @@ export const editJob = async (
   res: Response<ApiResponseDTO<JobDTO>>,
 ) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; //job id
     const {
       jobPosition,
       jobDescription,
