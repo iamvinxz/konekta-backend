@@ -8,6 +8,7 @@ import {
 } from "@/controllers/job.js";
 import { authenticate } from "@/middlewares/auth.js";
 import employerPage from "@/middlewares/rolecheck.js";
+import { validateJob } from "@/middlewares/validation.js";
 import { Router } from "express";
 
 const router = Router();
@@ -15,7 +16,7 @@ const router = Router();
 router.get("/", authenticate, getAllJobs);
 router.get("/:id", authenticate, getJobById);
 router.get("/companies/:id/jobs", authenticate, getJobsPerCompany);
-router.post("/", authenticate, employerPage, createJob);
+router.post("/", authenticate, employerPage, validateJob, createJob);
 router.delete("/:id", authenticate, employerPage, deleteJob);
 router.patch("/:id", authenticate, employerPage, editJob);
 
