@@ -9,12 +9,8 @@ export interface LoginDTO {
   password: string;
 }
 
-export interface RegisterDTO {
-  email: string;
+export interface RegisterDTO extends UserDTO {
   password: string;
-  firstName: string;
-  lastName: string;
-  role: Roles;
 }
 
 export interface ApiResponseDTO<T> {
@@ -30,14 +26,9 @@ export interface UserDTO {
   role: Roles;
 }
 
-export interface JobDTO {
+export interface JobDTO extends CreateJobDTO {
   id: string;
   companyId: string;
-  jobPosition: string;
-  jobDescription: string | null;
-  minSalary: number | null;
-  maxSalary: number | null;
-  employmentType: EmploymentType;
   status: JobStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -56,14 +47,17 @@ export interface JobQueryParams {
   employmentType: EmploymentType;
 }
 
-export interface CompanyDTO {
-  id: string;
-  employerId: string;
+export interface CreateCompany {
   image: string | null;
   companyName: string;
   companyDescription: string | null;
   location: string;
   website: string | null;
+}
+
+export interface CompanyDTO extends CreateCompany {
+  id: string;
+  employerId: string;
   createdAt: Date;
   updatedAt: Date;
 }
