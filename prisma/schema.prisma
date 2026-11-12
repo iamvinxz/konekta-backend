@@ -50,12 +50,12 @@ model User{
 
   applications Application[]
   savedJobs SavedJob[]
-  company Company?
+  company Company[]
 }
 
 model Company{
   id String @id @default(uuid())
-  employerId String @unique
+  employerId String
   image String?
   companyName String
   companyDescription String?
