@@ -83,6 +83,8 @@ export const register = async (
         firstName: true,
         lastName: true,
         role: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 
