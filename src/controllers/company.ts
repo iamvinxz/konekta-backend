@@ -2,6 +2,7 @@ import type {
   ApiResponseDTO,
   CompanyDTO,
   CreateCompany,
+  EditCompanyDTO,
 } from "@/lib/global.dto.js";
 import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
@@ -82,6 +83,34 @@ export const deleteCompany = async (
     return res
       .status(200)
       .send({ success: true, message: "Company deleted successfully." });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const editCompany = async (
+  req: Request<{ id: string }, {}, EditCompanyDTO>,
+  res: Response<ApiResponseDTO<CompanyDTO>>,
+) => {
+  try {
+    const { id } = req.params;
+    const { image, companyName, companyDescription, location, website } =
+      req.body;
+
+    const updatedCompany: CompanyDTO = await prisma.company.update({
+      where: { id, employerId: req.user.id },
+      data: { image, companyName, companyDescription, location, website },
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "Company updated successfully.",
+      data: updatedCompany,
+    });
   } catch (error) {
     return res.status(500).send({
       success: false,
