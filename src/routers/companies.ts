@@ -1,6 +1,7 @@
 import {
   createCompany,
   deleteCompany,
+  editCompany,
   getCompanies,
 } from "@/controllers/company.js";
 import { createJob, getJobsPerCompany } from "@/controllers/job.js";
@@ -16,5 +17,6 @@ router.get("/:id/jobs", authenticate, getJobsPerCompany);
 router.post("/", authenticate, employerPage, validateCompany, createCompany);
 router.post("/:id/jobs", authenticate, employerPage, validateJob, createJob);
 router.delete("/:id", authenticate, employerPage, deleteCompany);
+router.patch("/:id", authenticate, employerPage, validateCompany, editCompany);
 
 export default router;
