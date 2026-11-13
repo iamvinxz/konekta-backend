@@ -8,7 +8,6 @@ const employerPage = async (
 ) => {
   try {
     const role = req.user.role;
-    console.log(role);
     if (role === "employer") {
       return next();
     }
@@ -16,8 +15,6 @@ const employerPage = async (
       .status(403)
       .send({ success: false, message: "This is page is for employers only." });
   } catch (error) {
-    console.error("Create job error:", error);
-
     return res.status(500).send({
       success: false,
       message:
