@@ -1,4 +1,5 @@
 import type {
+  ApplicationStatus,
   EmploymentType,
   JobStatus,
   Roles,
@@ -9,8 +10,10 @@ export interface LoginDTO {
   password: string;
 }
 
-export interface RegisterDTO extends UserDTO {
-  password: string;
+export interface RegisterDTO extends LoginDTO {
+  firstName: string;
+  lastName: string;
+  role: Roles;
 }
 
 export interface ApiResponseDTO<T> {
@@ -20,10 +23,31 @@ export interface ApiResponseDTO<T> {
 }
 
 export interface UserDTO {
-  email: string;
+  id: string;
+  image?: string | null;
   firstName: string;
   lastName: string;
   role: Roles;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ApplicationDTO {
+  id: string;
+  jobId: string;
+  applicantId: string;
+  resume: string;
+  coverLetter: string;
+  status: ApplicationStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SavedJobsDTO {
+  id: string;
+  jobId: string;
+  userId: string;
+  createdAt: Date;
 }
 
 export interface JobDTO extends CreateJobDTO {
