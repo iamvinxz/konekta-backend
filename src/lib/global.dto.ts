@@ -63,3 +63,4 @@ export interface CompanyDTO extends CreateCompany {
 }
 
 export type EditJobDTO = CreateJobDTO;
+export type EditCompanyDTO = CreateCompany;
