@@ -52,7 +52,37 @@ export const createCompany = async (
       data: newCompany,
     });
   } catch (error) {
-    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const deleteCompany = async (
+  req: Request<{ id: string }>,
+  res: Response<ApiResponseDTO<{}>>,
+) => {
+  try {
+    const { id } = req.params; //company id
+
+    const company = await prisma.company.findUnique({
+      where: { id, employerId: req.user.id },
+    });
+
+    if (!company) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Company not found." });
+    }
+
+    await prisma.company.delete({ where: { id } });
+
+    return res
+      .status(200)
+      .send({ success: true, message: "Company deleted successfully." });
+  } catch (error) {
     return res.status(500).send({
       success: false,
       message:
