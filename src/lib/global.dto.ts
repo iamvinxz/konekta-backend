@@ -32,15 +32,18 @@ export interface UserDTO {
   updatedAt: Date;
 }
 
-export interface ApplicationDTO {
+export interface ApplicationDTO extends ApplicationBodyDTO {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ApplicationBodyDTO {
   jobId: string;
   applicantId: string;
   resume: string;
-  coverLetter: string;
+  coverLetter: string | null;
   status: ApplicationStatus;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface SavedJobsDTO {
