@@ -8,11 +8,14 @@ import { prisma } from "@/lib/prisma.js";
 import type { Request, Response } from "express";
 
 export const getCompanies = async (
-  req: Request,
+  req: Request<{}, {}, {}, { employerId: string }>,
   res: Response<ApiResponseDTO<CompanyDTO[]>>,
 ) => {
   try {
-    const companies: CompanyDTO[] = await prisma.company.findMany();
+    const { employerId } = req.query;
+    const companies: CompanyDTO[] = await prisma.company.findMany({
+      where: { employerId },
+    });
 
     return res.status(200).send({
       success: true,
