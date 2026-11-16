@@ -24,3 +24,24 @@ export const getUser = async (
     });
   }
 };
+
+export const deleteUser = async (
+  req: Request<{ id: string }>,
+  res: Response<ApiResponseDTO<{}>>,
+) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.user.delete({ where: { id } });
+
+    return res
+      .status(200)
+      .send({ success: true, message: "User deleted successfuly" });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
