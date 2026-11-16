@@ -58,8 +58,6 @@ export const createApplication = async (
       where: { id: jobId },
     });
 
-    console.log("Params:", req.params);
-    console.log("Job ID:", req.params.jobId);
     if (!job) {
       return res
         .status(404)
@@ -100,6 +98,58 @@ export const createApplication = async (
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).send({
+      success: false,
+      message:
+        "Sorry for the inconvenience. Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const withdrawApplication = async (
+  req: Request<{ applicationId: string }>,
+  res: Response<ApiResponseDTO<{}>>,
+) => {
+  try {
+    const { applicationId } = req.params;
+
+    if (!applicationId) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Please select which application." });
+    }
+
+    const application = await prisma.application.findUnique({
+      where: { id: applicationId, applicantId: req.user.id },
+    });
+
+    if (application?.applicantId != req.user.id) {
+      return res.status(403).send({
+        success: false,
+        message: "You are not authorize to withdraw this application.",
+      });
+    }
+
+    const withdrawnApplication = await prisma.application.update({
+      where: { id: applicationId, applicantId: req.user.id },
+      data: { status: "withdrawn" },
+      select: {
+        id: true,
+        applicantId: true,
+        resume: true,
+        coverLetter: true,
+        status: true,
+        updatedAt: true,
+        createdAt: true,
+      },
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "Withdrawn application successfully.",
+      data: withdrawnApplication,
+    });
+  } catch (error) {
     return res.status(500).send({
       success: false,
       message:
